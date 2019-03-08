@@ -4,14 +4,24 @@ import csv
 
 src_file = "../res/sample.csv"
 out_file = "../res/select_column_out.csv"
+expected_columns = ["Supplier Name", "Purchase Date", "Cost"]
+
+
+def extract_header(in_csv):
+    header = next(in_csv)
+    return [(it, header.index(it)) for it in expected_columns]
+
+
+def strip_row(row, header):
+    return [row[it[1]] for it in header]
 
 
 def transfer(in_csv, out_csv):
-    header = next(in_csv)
-    out_csv.writerow(header)
+    header = extract_header(in_csv)
+    out_csv.writerow(expected_columns)
     row_count = 0
     for row in in_csv:
-        out_csv.writerow(row)
+        out_csv.writerow(strip_row(row, header))
         row_count += 1
     return row_count
 
